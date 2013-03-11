@@ -1,3 +1,8 @@
+'''
+To run the app using paster, use the command
+paster serve minimal/minimal.ini --reload
+'''
+
 from webob import Request, Response, exc
 
 import os
@@ -16,6 +21,8 @@ class SimpleApp:
         path = self.cleanPath(req.path)
 
         if path != 'annotate':
+            #This returns an exception currently for a favicon request.
+            #Will change this up on adding a url parser
             raise exc.HTTPBadRequest('Invalid page: %s' % req.url)
         
         if method == 'POST' or method == 'PUT':

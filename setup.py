@@ -7,7 +7,7 @@ setup(name='minimal',
       version=version,
       description="",
       long_description="""
-         Very, very minimal example of a WSGI application and middleware.
+        Simple app that hashes POST contents and returns content on GET request
       """,
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
@@ -15,9 +15,7 @@ setup(name='minimal',
         "Programming Language :: Python",
         ],
       keywords='',
-      author='Ishan Mandhan',
-      author_email='none of your beeswax@somehost.com',
-      url='http://lionfacelemonface.wordpress.com',
+      author='Paul, Ishan',
       license='BSD',
       include_package_data=True,
       packages=['minimal',],
@@ -26,9 +24,6 @@ setup(name='minimal',
           'setuptools',
       ],
       entry_points="""
-      [paste.app_factory] 
-      main = minimal:main
-      
       [paste.filter_factory]
       main = minimal:middleware
       """,
