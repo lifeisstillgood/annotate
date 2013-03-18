@@ -27,6 +27,7 @@ I would like to create a *distributed annotation infrastructure*
 
 8. the next time the page is opened and the "annotate" javscript is run, it will ask the indexing service for its results for the URL - and then fetch and display those annotations.
 
+----
 docs
 ----
 
