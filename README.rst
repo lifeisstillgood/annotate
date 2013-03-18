@@ -1,3 +1,6 @@
+:docurl: http://annotate.mikadosoftware.com
+:desc: distributed annotation for websites
+
 ========
 Annotate
 ========
