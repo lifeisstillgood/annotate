@@ -24,7 +24,7 @@ setup(name='minimal',
           'setuptools',
       ],
       entry_points="""
-      [paste.filter_factory]
-      main = minimal:middleware
-      """,
+      [paste.app_factory] 
+      main = minimal:main
+      """
       )
