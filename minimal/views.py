@@ -7,8 +7,9 @@ from webob import Request, Response, exc
 
 import os
 import hashlib
+import json
 
-STORAGE_FILE_PATH = '/tmp/storageFile.txt'
+STORAGE_DIRECTORY = '/tmp/annotate'
 
 def hasher(environ, start_response):
     import pdb; pdb.set_trace()
@@ -17,25 +18,28 @@ def hasher(environ, start_response):
     method = req.method
     
     if method in ('POST', 'PUT'):
-        hashedContent = hashString('md5', content)
-        storageFile = open(STORAGE_FILE_PATH, 'w')
-        storageFile.writelines(hashedContent)
+        hashFunction = hashlib.md5()
+        hashFunction.update(content)
+        fileName = hashFunction.hexdigest()
         
-        resp = Response('Your contents have been hashed!')
+        fileObj = open(STORAGE_DIRECTORY + "/" + fileName, 'w')
+        fileObj.writelines(content)
+        
+        resp = Response(json.dumps({
+            'fileName' : fileName
+        }))
         return resp(environ, start_response)
     
     elif method == 'GET':
-        storageFile = open(STORAGE_FILE_PATH, 'r')
+        fileName = req.params.get('file')
+        if not fileName:
+            raise exc.HTTPBadRequest('Filename required')
+        try:
+            storageFile = open(STORAGE_DIRECTORY + "/" + fileName, 'r')
+        except IOError:
+            raise exc.HTTPBadRequest('Invalid filename: %s' % fileName)
+        
         resp = Response()
         resp.body = storageFile.read()
         return resp(environ, start_response)
-
-def hashString(hashAlgorithm, content):
-    try:
-        hashFunction = getattr(hashlib, hashAlgorithm)()
-    except AttributeError:
-        hashFunction = getattr(hashlib, 'md5')()
-    
-    hashFunction.update(content)
-    return hashFunction.digest()
         

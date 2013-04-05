@@ -4,7 +4,8 @@ from httplib import HTTPException
 import views
 
 url_map = Map([
-    Rule('/annotate/', endpoint='hasher')
+    Rule('/annotate', endpoint='hasher'),
+    Rule('/annotate<queryParam>', endpoint='hasher')
 ])
 
 def url_mapper(environ, start_response):
