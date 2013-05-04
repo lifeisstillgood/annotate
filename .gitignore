@@ -10,7 +10,7 @@ _mailinglist
 .tox
 *.log
 *.*~
-#*.*#
+#*.*
 */_build/*
 *thirdparty*
 

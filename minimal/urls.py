@@ -5,11 +5,11 @@ import views
 
 url_map = Map([
     Rule('/annotate', endpoint='hasher'),
+    #Format for get request '/annotate?file=hashedFileName'
     Rule('/annotate<queryParam>', endpoint='hasher')
 ])
 
 def url_mapper(environ, start_response):
-    import pdb; pdb.set_trace()
     urls = url_map.bind_to_environ(environ)
     try:
         endpoint, args = urls.match()
