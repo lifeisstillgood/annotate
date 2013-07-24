@@ -1,36 +1,38 @@
 from webtest import TestApp
-from apps import *
+from views import *
 from webob import exc
 
+import json
 import hashlib
 
 HOST_ADDRESS = 'http://127.0.0.1:6543'
 
-def testSimpleApp():
-    app = TestApp(SimpleApp())
-    postData = {
-        'key1' : 'value1',
-        'key2' : 'value2',
-        'key3' : 'value3'
-    }
-    resp = app.post(HOST_ADDRESS + '/annotate/', postData)
-    
-    assert resp.status == '200 OK'
-    
-    hashFunction = hashlib.md5()
-    hashFunction.update("key3=value3&key2=value2&key1=value1")
-    
-    hashedData = hashFunction.digest()
-    
-    resp = app.get(HOST_ADDRESS + '/annotate')
-    assert resp.body == hashedData
+def testHashingFunctionality():
+    app = TestApp(hasher)
+    annotation = "This is a sample piece of annotation"
 
-    #Check that having a trailing / doesn't break the app
-    resp = app.get(HOST_ADDRESS + '/annotate/')
-    assert resp.body == hashedData
+    postData = {
+        'data' : annotation
+    }
+    resp = app.post(HOST_ADDRESS + "/annotate/", postData)
+
+    assert resp.status == '200 OK'
+
+    body = json.loads(resp.body)
+    hashFunction = hashlib.md5()
+    hashFunction.update(annotation)
+    hashedData = hashFunction.hexdigest()
     
-    #Send in an invalid url and make sure we get the right exception
-    try:
-        resp = app.get(HOST_ADDRESS)
-    except Exception, e:
-        assert type(e) == exc.HTTPBadRequest
+    # Make sure the body is a json in the format {"fileName" : <actualFileName>}
+    assert 'fileName' in body
+    # Make sure the file name is a md5 hash of the annotation
+    assert body['fileName'] == hashedData
+    
+    resp = app.get(HOST_ADDRESS + "/annotate?file=" + hashedData)
+    
+    # Now do a get request with the the hash as the file name parameter and make
+    # sure that the annotation is returned
+    assert resp.status == '200 OK'
+    assert resp.body == annotation
+    
+testHashingFunctionality()    

@@ -1,6 +1,5 @@
 javascript:(function(){
 
-
 if (typeof jQuery=='undefined'){
     var script = document.createElement('script');
     script.src = 'http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js';
@@ -55,11 +54,8 @@ function main(){
             anntStartIndex += indexWithinNode;
             
             return anntStartIndex;
-            
         }
-    
     }
-    
     document.onmouseup = run;
 }
 
